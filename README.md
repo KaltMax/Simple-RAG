@@ -32,12 +32,12 @@ SemanticKernelRAG/
 
 ## Prerequisites
 
-- .NET 9.0 SDK or later
+- .NET 10.0 SDK or later
 - Ollama (for full RAG functionality)
 
 ## Installation
 
-### 1. Install .NET 9
+### 1. Install .NET 10
 
 Download and install from: https://dotnet.microsoft.com/download
 
@@ -345,41 +345,8 @@ public class PostgresVectorStore : IVectorStore
 
 This project is provided as-is for educational purposes.
 
-## Future Enhancements
-
-- [x] Clean architecture with separation of concerns
-- [x] Similarity scores in results
-- [x] Configurable parameters
-- [ ] Support for multiple document formats (DOCX, TXT, Markdown)
-- [ ] Persistent vector store (PostgreSQL with pgvector, Qdrant)
-- [ ] Web API interface (ASP.NET Core)
-- [ ] Document metadata tracking with page numbers
-- [ ] Citation with exact sources
-- [ ] Streaming responses
-- [ ] GUI interface (React)
-- [ ] Unit tests and integration tests
-- [ ] Docker containerization
-- [ ] Batch processing of multiple documents
-
 ## Resources
 
 - [Semantic Kernel Documentation](https://learn.microsoft.com/en-us/semantic-kernel/)
 - [Ollama Models](https://ollama.ai/library)
 - [iText7 Documentation](https://itextpdf.com/products/itext-7)
-- [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
-
-## Contributing
-
-Feel free to submit issues or pull requests! When contributing:
-
-1. Follow the existing code style
-2. Add XML documentation to public APIs
-3. Update tests for new features
-4. Update this README with new features
-
-## Support
-
-For issues or questions:
-- Check the Troubleshooting section
-- Review existing GitHub issues
-- Create a new issue with detailed information
