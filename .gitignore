@@ -615,3 +615,6 @@ $RECYCLE.BIN/
 
 # Directory for file upload testing (can be removed later)
 documents/
+
+# Claude
+.claude/
