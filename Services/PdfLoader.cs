@@ -1,6 +1,4 @@
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas.Parser;
-using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using UglyToad.PdfPig;
 
 namespace SemanticKernelRAG.Services
 {
@@ -24,15 +22,11 @@ namespace SemanticKernelRAG.Services
 
             var pages = new List<string>();
 
-            using var pdfReader = new PdfReader(pdfPath);
-            using var pdfDocument = new PdfDocument(pdfReader);
+            using var pdfDocument = PdfDocument.Open(pdfPath);
 
-            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++)
+            foreach (var page in pdfDocument.GetPages())
             {
-                var page = pdfDocument.GetPage(i);
-                var strategy = new SimpleTextExtractionStrategy();
-                var text = PdfTextExtractor.GetTextFromPage(page, strategy);
-                pages.Add(text);
+                pages.Add(page.Text);
             }
 
             return pages;
@@ -43,9 +37,8 @@ namespace SemanticKernelRAG.Services
         /// </summary>
         public int GetPageCount(string pdfPath)
         {
-            using var pdfReader = new PdfReader(pdfPath);
-            using var pdfDocument = new PdfDocument(pdfReader);
-            return pdfDocument.GetNumberOfPages();
+            using var pdfDocument = PdfDocument.Open(pdfPath);
+            return pdfDocument.NumberOfPages;
         }
     }
 }

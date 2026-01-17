@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="itext7" Version="9.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.InMemory" Version="1.66.0-preview" />
+    <PackageReference Include="PdfPig" Version="0.1.13" />
   </ItemGroup>
 
 </Project>

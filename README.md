@@ -4,7 +4,7 @@ A C#/.NET implementation of a Retrieval-Augmented Generation (RAG) system using 
 
 ## Features
 
-- **PDF Processing**: Loads and extracts text from PDF documents using iText7
+- **PDF Processing**: Loads and extracts text from PDF documents using PdfPig
 - **Text Chunking**: Configurable text splitting with overlap (default: 1000 chars with 200 char overlap)
 - **Vector Embeddings**: Creates embeddings using Ollama's `nomic-embed-text` model
 - **In-Memory Vector Store**: Thread-safe custom implementation with cosine similarity search
@@ -17,7 +17,7 @@ A C#/.NET implementation of a Retrieval-Augmented Generation (RAG) system using 
 
 ```
 SemanticKernelRAG/
-├── Program.cs                      # Clean entry point (minimal logic)
+├── Program.cs                     # Clean entry point (minimal logic)
 ├── Models/
 │   ├── VectorEntry.cs             # Vector storage data model
 │   ├── SearchResult.cs            # Search result with similarity scores
@@ -349,4 +349,4 @@ This project is provided as-is for educational purposes.
 
 - [Semantic Kernel Documentation](https://learn.microsoft.com/en-us/semantic-kernel/)
 - [Ollama Models](https://ollama.ai/library)
-- [iText7 Documentation](https://itextpdf.com/products/itext-7)
+- [PdfPig Repository](https://github.com/UglyToad/PdfPig)
