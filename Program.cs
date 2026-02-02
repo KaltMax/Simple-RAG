@@ -7,9 +7,9 @@ namespace SemanticKernelRAG
     {
         static async Task Main(string[] args)
         {
-            ConsoleUI.ShowWelcome();
+            ConsoleUi.ShowWelcome();
 
-            var pdfPath = ConsoleUI.GetPdfPath();
+            var pdfPath = ConsoleUi.GetPdfPath();
             if (pdfPath == null)
                 return;
 
@@ -30,8 +30,8 @@ namespace SemanticKernelRAG
                 var hasLlm = await ragService.InitializeAsync(pdfPath);
 
                 // Show ready message and start interactive loop
-                ConsoleUI.ShowReadyMessage(hasLlm, ragService.ChunkCount);
-                await ConsoleUI.RunInteractiveLoopAsync(ragService, hasLlm);
+                ConsoleUi.ShowReadyMessage(hasLlm, ragService.ChunkCount);
+                await ConsoleUi.RunInteractiveLoopAsync(ragService, hasLlm);
             }
             catch (Exception ex)
             {

@@ -18,7 +18,6 @@ namespace SemanticKernelRAG.Services
         private IChatCompletionService? _chatService;
         private bool _isInitialized;
 
-        public bool HasLlm => _isInitialized;
         public int ChunkCount => _vectorStore.Count;
 
         public RagService(RagConfiguration? config = null)
@@ -51,18 +50,14 @@ namespace SemanticKernelRAG.Services
                 // Create kernel with Ollama services
                 var kernelBuilder = Kernel.CreateBuilder();
 
-#pragma warning disable SKEXP0010
-                kernelBuilder.AddOpenAIEmbeddingGenerator(
+                kernelBuilder.AddOllamaEmbeddingGenerator(
                     modelId: _config.EmbeddingModel,
-                    apiKey: "ollama",
-                    httpClient: new System.Net.Http.HttpClient { BaseAddress = new Uri(_config.OllamaEndpoint) }
+                    endpoint: new Uri(_config.OllamaEndpoint)
                 );
-#pragma warning restore SKEXP0010
 
-                kernelBuilder.AddOpenAIChatCompletion(
+                kernelBuilder.AddOllamaChatCompletion(
                     modelId: _config.ChatModel,
-                    apiKey: "ollama",
-                    httpClient: new System.Net.Http.HttpClient { BaseAddress = new Uri(_config.OllamaEndpoint) }
+                    endpoint: new Uri(_config.OllamaEndpoint)
                 );
 
                 var kernel = kernelBuilder.Build();
@@ -135,19 +130,6 @@ namespace SemanticKernelRAG.Services
             var response = await _chatService.GetChatMessageContentAsync(chatHistory);
 
             return (response.Content ?? "No answer generated.", searchResults);
-        }
-
-        /// <summary>
-        /// Performs simple keyword-based search (fallback when LLM is not available)
-        /// </summary>
-        /// <param name="question">The search query</param>
-        /// <returns>List of matching text chunks</returns>
-        public List<string> SearchKeyword(string question, List<string> chunks)
-        {
-            return chunks
-                .Where(chunk => chunk.Contains(question, StringComparison.OrdinalIgnoreCase))
-                .Take(_config.TopK)
-                .ToList();
         }
     }
 }

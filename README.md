@@ -23,7 +23,7 @@ SemanticKernelRAG/
 │   ├── SearchResult.cs            # Search result with similarity scores
 │   └── RagConfiguration.cs        # Configurable settings
 └── Services/
-    ├── ConsoleUI.cs               # Console UI interactions
+    ├── ConsoleUi.cs               # Console UI interactions
     ├── PdfLoader.cs               # PDF text extraction
     ├── TextChunker.cs             # Text splitting with overlap
     ├── SimpleVectorStore.cs       # Vector storage and search
@@ -133,7 +133,7 @@ Goodbye!
 ### Key Components
 
 **Services Layer:**
-- **ConsoleUI**: Handles all console user interface interactions (welcome, prompts, results display)
+- **ConsoleUi**: Handles all console user interface interactions (welcome, prompts, results display)
 - **PdfLoader**: Handles PDF document loading and text extraction
 - **TextChunker**: Splits text into overlapping chunks with validation
 - **SimpleVectorStore**: Thread-safe in-memory vector database with cosine similarity
@@ -163,10 +163,10 @@ User Question → RagService → Embedding → VectorStore.Search → Top-K Resu
 
 | Class | Responsibility | Key Methods |
 |-------|---------------|-------------|
-| `ConsoleUI` | Console user interface | `ShowWelcome()`, `GetPdfPath()`, `RunInteractiveLoopAsync()` |
-| `PdfLoader` | PDF text extraction | `LoadPdf()`, `GetPageCount()` |
+| `ConsoleUi` | Console user interface | `ShowWelcome()`, `ShowReadyMessage()`, `GetPdfPath()`, `RunInteractiveLoopAsync()` |
+| `PdfLoader` | PDF text extraction | `LoadPdf()` |
 | `TextChunker` | Text splitting with overlap | `SplitDocuments()`, `SplitText()` |
-| `SimpleVectorStore` | Vector storage & search | `AddEntry()`, `Search()`, `SearchText()` |
+| `SimpleVectorStore` | Vector storage & search | `AddEntry()`, `Search()` |
 | `RagService` | RAG orchestration | `InitializeAsync()`, `AskAsync()` |
 | `RagConfiguration` | Configuration management | Properties for all settings |
 
@@ -292,7 +292,8 @@ var results = vectorStore.Search(queryEmbedding, topK: 5);
 
 - **Microsoft.SemanticKernel**: Core Semantic Kernel framework
 - **Microsoft.SemanticKernel.Connectors.InMemory**: Vector store support
-- **itext7**: PDF text extraction
+- **Microsoft.SemanticKernel.Connectors.Ollama**: Ollama integration for embeddings and chat
+- **PdfPig**: PDF text extraction
 - **Microsoft.Extensions.Logging.Console**: Logging support
 
 ## Development

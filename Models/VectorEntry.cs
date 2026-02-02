@@ -18,7 +18,7 @@ namespace SemanticKernelRAG.Models
         /// <summary>
         /// The vector embedding representation of the text
         /// </summary>
-        public float[] Embedding { get; set; } = Array.Empty<float>();
+        public float[] Embedding { get; set; } = [];
 
         /// <summary>
         /// Optional metadata about the entry

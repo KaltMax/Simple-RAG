@@ -3,7 +3,7 @@ namespace SemanticKernelRAG.Services
     /// <summary>
     /// Handles console UI interactions for the RAG application
     /// </summary>
-    public class ConsoleUI
+    public class ConsoleUi
     {
         /// <summary>
         /// Prompts the user for a PDF file path
@@ -56,7 +56,7 @@ namespace SemanticKernelRAG.Services
         }
 
         /// <summary>
-        /// Runs the interactive Q&A loop
+        /// Runs the interactive Q & A loop
         /// </summary>
         /// <param name="ragService">The RAG service instance</param>
         /// <param name="hasLlm">Whether LLM is available</param>
@@ -118,7 +118,7 @@ namespace SemanticKernelRAG.Services
                 {
                     Console.WriteLine($"\n[{i + 1}] Similarity: {sources[i].Similarity:F3}");
                     var preview = sources[i].Text.Length > 150
-                        ? sources[i].Text.Substring(0, 150) + "..."
+                        ? sources[i].Text[..150] + "..."
                         : sources[i].Text;
                     Console.WriteLine($"    {preview.Replace("\n", " ")}");
                 }

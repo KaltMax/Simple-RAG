@@ -31,14 +31,5 @@ namespace SemanticKernelRAG.Services
 
             return pages;
         }
-
-        /// <summary>
-        /// Gets the number of pages in a PDF without loading all content
-        /// </summary>
-        public int GetPageCount(string pdfPath)
-        {
-            using var pdfDocument = PdfDocument.Open(pdfPath);
-            return pdfDocument.NumberOfPages;
-        }
     }
 }

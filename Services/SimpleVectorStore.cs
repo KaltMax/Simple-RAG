@@ -7,8 +7,8 @@ namespace SemanticKernelRAG.Services
     /// </summary>
     public class SimpleVectorStore
     {
-        private readonly List<VectorEntry> _entries = new();
-        private readonly object _lock = new();
+        private readonly List<VectorEntry> _entries = [];
+        private readonly Lock _lock = new();
 
         /// <summary>
         /// Gets the total number of entries in the store
@@ -59,39 +59,6 @@ namespace SemanticKernelRAG.Services
                     .ToList();
 
                 return results;
-            }
-        }
-
-        /// <summary>
-        /// Gets all text from the top K similar entries
-        /// </summary>
-        /// <param name="queryEmbedding">The query vector</param>
-        /// <param name="topK">Number of results to return</param>
-        /// <returns>List of text content</returns>
-        public List<string> SearchText(float[] queryEmbedding, int topK = 3)
-        {
-            return Search(queryEmbedding, topK).Select(r => r.Text).ToList();
-        }
-
-        /// <summary>
-        /// Clears all entries from the store
-        /// </summary>
-        public void Clear()
-        {
-            lock (_lock)
-            {
-                _entries.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Gets an entry by ID
-        /// </summary>
-        public VectorEntry? GetById(int id)
-        {
-            lock (_lock)
-            {
-                return _entries.FirstOrDefault(e => e.Id == id);
             }
         }
 
