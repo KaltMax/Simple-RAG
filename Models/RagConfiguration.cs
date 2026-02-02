@@ -39,7 +39,8 @@ namespace SemanticKernelRAG.Models
         /// System prompt for the LLM
         /// </summary>
         public string SystemPrompt { get; set; } =
-            "You are a helpful assistant that answers questions based on the provided context. " +
-            "Only use information from the context to answer.";
+            "You are a helpful assistant that answers questions based only on the provided context. " +
+            "If the context does not contain enough information to answer the question, say so. " +
+            "Do not make up information.";
     }
 }
