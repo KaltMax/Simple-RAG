@@ -6,12 +6,10 @@ A C#/.NET implementation of a Retrieval-Augmented Generation (RAG) system using 
 
 - **PDF Processing**: Loads and extracts text from PDF documents using PdfPig
 - **Text Chunking**: Configurable text splitting with overlap (default: 1000 chars with 200 char overlap)
-- **Vector Embeddings**: Creates embeddings using Ollama's `nomic-embed-text` model
+- **Vector Embeddings**: Creates embeddings using Ollama's `nomic-embed-text-v2-moe` model
 - **In-Memory Vector Store**: Thread-safe custom implementation with cosine similarity search
 - **LLM Integration**: Uses Ollama's `llama3.2:1b` model for question answering
 - **Interactive Q&A**: Command-line interface with similarity scores and source previews
-- **Fallback Mode**: Works in retrieval-only mode if Ollama is not available
-- **Clean Architecture**: Modular design with separation of concerns
 
 ## Project Structure
 
@@ -145,7 +143,7 @@ Goodbye!
 - **RagConfiguration**: Centralized configuration for all RAG parameters
 
 **Program.cs:**
-- Clean entry point with minimal logic
+- Entry point with minimal logic
 - Configuration setup and initialization
 - Error handling for the main application flow
 
@@ -297,19 +295,6 @@ var results = vectorStore.Search(queryEmbedding, topK: 5);
 - **Microsoft.Extensions.Logging.Console**: Logging support
 
 ## Development
-
-### Running Tests
-
-```bash
-dotnet test
-```
-
-### Code Style
-
-- Follow C# naming conventions
-- Use XML documentation comments
-- Keep classes focused and single-purpose
-- Prefer composition over inheritance
 
 ### Extending the System
 

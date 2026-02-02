@@ -13,7 +13,7 @@ namespace SemanticKernelRAG.Models
         /// <summary>
         /// Name of the embedding model to use
         /// </summary>
-        public string EmbeddingModel { get; set; } = "nomic-embed-text";
+        public string EmbeddingModel { get; set; } = "nomic-embed-text-v2-moe";
 
         /// <summary>
         /// Name of the chat/LLM model to use
