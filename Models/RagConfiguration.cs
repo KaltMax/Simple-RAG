@@ -8,17 +8,28 @@ namespace SemanticKernelRAG.Models
         /// <summary>
         /// Ollama endpoint URL
         /// </summary>
-        public string OllamaEndpoint { get; set; } = "http://localhost:11434/v1";
+        public string OllamaEndpoint { get; set; } = "http://localhost:11434";
 
         /// <summary>
         /// Name of the embedding model to use
         /// </summary>
-        public string EmbeddingModel { get; set; } = "nomic-embed-text-v2-moe";
+        public string EmbeddingModel { get; set; } = "qwen3-embedding:0.6b";
 
         /// <summary>
         /// Name of the chat/LLM model to use
         /// </summary>
-        public string ChatModel { get; set; } = "llama3.2:1b";
+        public string ChatModel { get; set; } = "qwen3.5:0.8b";
+
+        /// <summary>
+        /// Whether reasoning ("thinking") models may think before answering.
+        /// Disabled by default: on CPU-only machines thinking can take minutes per question.
+        /// </summary>
+        public bool EnableThinking { get; set; } = false;
+
+        /// <summary>
+        /// HTTP timeout for requests to Ollama (the .NET default is 100 seconds)
+        /// </summary>
+        public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromMinutes(5);
 
         /// <summary>
         /// Size of text chunks in characters

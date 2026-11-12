@@ -50,14 +50,21 @@ namespace SemanticKernelRAG.Services
                 // Create kernel with Ollama services
                 var kernelBuilder = Kernel.CreateBuilder();
 
+                // Custom HttpClient so slow local models don't hit the 100s default timeout
+                var httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri(_config.OllamaEndpoint),
+                    Timeout = _config.RequestTimeout
+                };
+
                 kernelBuilder.AddOllamaEmbeddingGenerator(
                     modelId: _config.EmbeddingModel,
-                    endpoint: new Uri(_config.OllamaEndpoint)
+                    httpClient: httpClient
                 );
 
                 kernelBuilder.AddOllamaChatCompletion(
                     modelId: _config.ChatModel,
-                    endpoint: new Uri(_config.OllamaEndpoint)
+                    httpClient: httpClient
                 );
 
                 var kernel = kernelBuilder.Build();
@@ -127,7 +134,12 @@ namespace SemanticKernelRAG.Services
             chatHistory.AddSystemMessage(_config.SystemPrompt);
             chatHistory.AddUserMessage($"Context:\n{context}\n\nQuestion: {question}\n\nAnswer:");
 
-            var response = await _chatService.GetChatMessageContentAsync(chatHistory);
+            var settings = new PromptExecutionSettings
+            {
+                ExtensionData = new Dictionary<string, object> { ["think"] = _config.EnableThinking }
+            };
+
+            var response = await _chatService.GetChatMessageContentAsync(chatHistory, settings);
 
             return (response.Content ?? "No answer generated.", searchResults);
         }
