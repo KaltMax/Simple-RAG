@@ -18,8 +18,8 @@ namespace SemanticKernelRAG
                 // Create configuration (can be customized)
                 var config = new RagConfiguration
                 {
-                    EmbeddingModel = "nomic-embed-text",
-                    ChatModel = "llama3.2:1b",
+                    EmbeddingModel = "qwen3-embedding:0.6b",
+                    ChatModel = "qwen3.5:0.8b",
                     ChunkSize = 1000,
                     ChunkOverlap = 200,
                     TopK = 3

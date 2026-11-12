@@ -6,22 +6,22 @@ A C#/.NET implementation of a Retrieval-Augmented Generation (RAG) system using 
 
 - **PDF Processing**: Loads and extracts text from PDF documents using PdfPig
 - **Text Chunking**: Configurable text splitting with overlap (default: 1000 chars with 200 char overlap)
-- **Vector Embeddings**: Creates embeddings using Ollama's `nomic-embed-text-v2-moe` model
+- **Vector Embeddings**: Creates embeddings using Ollama's `qwen3-embedding:0.6b` model
 - **In-Memory Vector Store**: Thread-safe custom implementation with cosine similarity search
-- **LLM Integration**: Uses Ollama's `llama3.2:1b` model for question answering
+- **LLM Integration**: Uses Ollama's `qwen3.5:0.8b` model for question answering
 - **Interactive Q&A**: Command-line interface with similarity scores and source previews
 
 ## Project Structure
 
 ```
-SemanticKernelRAG/
+Simple-RAG/
 ├── Program.cs                     # Clean entry point (minimal logic)
 ├── Models/
 │   ├── VectorEntry.cs             # Vector storage data model
 │   ├── SearchResult.cs            # Search result with similarity scores
-│   └── RagConfiguration.cs        # Configurable settings
+│   └── RagConfiguration.cs        # Configurable settings (models, timeout, chunking)
 └── Services/
-    ├── ConsoleUi.cs               # Console UI interactions
+    ├── ConsoleUI.cs               # Console UI interactions
     ├── PdfLoader.cs               # PDF text extraction
     ├── TextChunker.cs             # Text splitting with overlap
     ├── SimpleVectorStore.cs       # Vector storage and search
@@ -42,6 +42,7 @@ Download and install from: https://dotnet.microsoft.com/download
 ### 2. Install Ollama
 
 **Windows/Mac/Linux:**
+
 ```bash
 # Visit https://ollama.ai and download the installer
 # Or use these commands:
@@ -56,16 +57,16 @@ curl -fsSL https://ollama.ai/install.sh | sh
 
 ```bash
 # Pull the embedding model (required for vector search)
-ollama pull nomic-embed-text
+ollama pull qwen3-embedding:0.6b
 
 # Pull the LLM model (for answer generation)
-ollama pull llama3.2:1b
+ollama pull qwen3.5:0.8b
 ```
 
 ### 4. Build the Project
 
 ```bash
-cd SemanticKernelRAG
+cd Simple-RAG
 dotnet restore
 dotnet build
 ```
@@ -93,7 +94,7 @@ Created 27 text chunks
 Creating vector embeddings (using Ollama embeddings)...
 Storing document chunks in vector store...
 Vector store created with Ollama embeddings
-Using Ollama (embedding: nomic-embed-text, chat: llama3.2:1b)
+Using Ollama (embedding: qwen3-embedding:0.6b, chat: qwen3.5:0.8b)
 RAG system ready!
 
 ==================================================
@@ -131,6 +132,7 @@ Goodbye!
 ### Key Components
 
 **Services Layer:**
+
 - **ConsoleUi**: Handles all console user interface interactions (welcome, prompts, results display)
 - **PdfLoader**: Handles PDF document loading and text extraction
 - **TextChunker**: Splits text into overlapping chunks with validation
@@ -138,11 +140,13 @@ Goodbye!
 - **RagService**: Orchestrates the entire RAG pipeline (loading, embedding, retrieval, generation)
 
 **Models Layer:**
+
 - **VectorEntry**: Represents a stored document chunk with embedding and metadata
 - **SearchResult**: Contains matched text, similarity score, and metadata
 - **RagConfiguration**: Centralized configuration for all RAG parameters
 
 **Program.cs:**
+
 - Entry point with minimal logic
 - Configuration setup and initialization
 - Error handling for the main application flow
@@ -159,25 +163,27 @@ User Question → RagService → Embedding → VectorStore.Search → Top-K Resu
 
 ### Class Responsibilities
 
-| Class | Responsibility | Key Methods |
-|-------|---------------|-------------|
-| `ConsoleUi` | Console user interface | `ShowWelcome()`, `ShowReadyMessage()`, `GetPdfPath()`, `RunInteractiveLoopAsync()` |
-| `PdfLoader` | PDF text extraction | `LoadPdf()` |
-| `TextChunker` | Text splitting with overlap | `SplitDocuments()`, `SplitText()` |
-| `SimpleVectorStore` | Vector storage & search | `AddEntry()`, `Search()` |
-| `RagService` | RAG orchestration | `InitializeAsync()`, `AskAsync()` |
-| `RagConfiguration` | Configuration management | Properties for all settings |
+| Class                 | Responsibility              | Key Methods                                                                                |
+| --------------------- | --------------------------- | ------------------------------------------------------------------------------------------ |
+| `ConsoleUi`         | Console user interface      | `ShowWelcome()`, `ShowReadyMessage()`, `GetPdfPath()`, `RunInteractiveLoopAsync()` |
+| `PdfLoader`         | PDF text extraction         | `LoadPdf()`                                                                              |
+| `TextChunker`       | Text splitting with overlap | `SplitDocuments()`, `SplitText()`                                                      |
+| `SimpleVectorStore` | Vector storage & search     | `AddEntry()`, `Search()`                                                               |
+| `RagService`        | RAG orchestration           | `InitializeAsync()`, `AskAsync()`                                                      |
+| `RagConfiguration`  | Configuration management    | Properties for all settings                                                                |
 
 ## Configuration
 
-All configuration is centralized in `RagConfiguration`. You can customize in `Program.cs`:
+All configuration is centralized in `RagConfiguration`. The defaults (models, endpoint, timeout, prompt) live in `Models/RagConfiguration.cs`; `Program.cs` only overrides the chunking settings. Any property can be overridden when creating the configuration:
 
 ```csharp
 var config = new RagConfiguration
 {
-    EmbeddingModel = "nomic-embed-text",    // Embedding model
-    ChatModel = "llama3.2:1b",              // Chat/LLM model
-    OllamaEndpoint = "http://localhost:11434/v1",
+    EmbeddingModel = "qwen3-embedding:0.6b", // Embedding model
+    ChatModel = "qwen3.5:0.8b",             // Chat/LLM model
+    OllamaEndpoint = "http://localhost:11434",
+    EnableThinking = false,                  // Let reasoning models "think" first (slow on CPU)
+    RequestTimeout = TimeSpan.FromMinutes(5),// HTTP timeout for Ollama requests
     ChunkSize = 1000,                        // Characters per chunk
     ChunkOverlap = 200,                      // Overlap between chunks
     TopK = 3,                                // Number of results to retrieve
@@ -193,8 +199,8 @@ var ragService = new RagService(config);
 // Use a larger, more capable model
 var config = new RagConfiguration
 {
-    EmbeddingModel = "nomic-embed-text",
-    ChatModel = "llama3:8b",  // Larger model for better answers
+    EmbeddingModel = "qwen3-embedding:0.6b",
+    ChatModel = "qwen3.5:4b", // Larger model for better answers
     TopK = 5                   // Retrieve more context
 };
 ```
@@ -262,6 +268,7 @@ var results = vectorStore.Search(queryEmbedding, topK: 5);
 
 - Make sure Ollama is installed and running: `ollama --version`
 - Check that the models are pulled: `ollama list`
+- A `404 (Not Found)` error usually means one of the configured models has not been pulled yet
 - Verify Ollama is accessible: `curl http://localhost:11434`
 - Try restarting Ollama: `ollama serve`
 
@@ -281,10 +288,17 @@ var results = vectorStore.Search(queryEmbedding, topK: 5);
 
 ### Slow Performance
 
-- Embeddings generation is the slowest part (first run)
-- Subsequent questions are much faster (embeddings cached)
-- Use smaller models for faster responses
+- Embeddings are created once at startup and kept in memory, so each question only embeds the question itself
+- On a CPU-only machine, answer generation by the chat model is the slowest part
+- Use smaller models for faster responses and keep `EnableThinking = false`
 - Consider using a GPU-accelerated Ollama setup
+
+### "The request was canceled due to the configured HttpClient.Timeout of 100 seconds"
+
+- Reasoning models such as `qwen3.5` write a long hidden "thinking" section before answering. On a CPU-only machine this can take several minutes per question
+- Thinking is disabled by default (`EnableThinking = false`). Only enable it if you have a GPU
+- The Ollama HTTP timeout is set by `RequestTimeout` (default: 5 minutes, instead of .NET's 100 seconds)
+- The first question after startup is slower because Ollama has to load the chat model into memory
 
 ## NuGet Packages Used
 
@@ -299,6 +313,7 @@ var results = vectorStore.Search(queryEmbedding, topK: 5);
 ### Extending the System
 
 **Add new document loaders:**
+
 ```csharp
 // Create a new loader in Services/
 public class DocxLoader
@@ -308,6 +323,7 @@ public class DocxLoader
 ```
 
 **Add metadata tracking:**
+
 ```csharp
 // Use the Metadata property in VectorEntry
 vectorStore.AddEntry(id, text, embedding, new Dictionary<string, object>
@@ -319,6 +335,7 @@ vectorStore.AddEntry(id, text, embedding, new Dictionary<string, object>
 ```
 
 **Implement persistent storage:**
+
 ```csharp
 // Replace SimpleVectorStore with a persistent implementation
 public class PostgresVectorStore : IVectorStore
@@ -329,7 +346,7 @@ public class PostgresVectorStore : IVectorStore
 
 ## License
 
-This project is provided as-is for educational purposes.
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
 
 ## Resources
 
